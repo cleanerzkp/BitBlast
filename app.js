@@ -8,25 +8,28 @@ form.addEventListener('submit', async (event) => {
 
   output.textContent = '';
   let prevBlockHash = '';
+  await mineBlocks(numBlocks, hashStart, prevBlockHash, output);
+});
+
+async function mineBlocks(numBlocks, hashStart, prevBlockHash, output) {
   for (let i = 1; i <= numBlocks; i++) {
     let block = {
       nonce: 0,
       hash: ''
     };
-    const startTime = performance.now();
+    const start = performance.now();
     while (!block.hash.startsWith(hashStart)) {
       block.nonce++;
       block.hash = await hash(`${prevBlockHash}${block.nonce}`);
     }
-    const endTime = performance.now();
-    const timeTaken = (endTime - startTime).toFixed(2);
+    const timeTaken = (performance.now() - start).toFixed(2);
     output.textContent += `Block: Block ${i}\n`;
     output.textContent += `Nonce: ${block.nonce}\n`;
     output.textContent += `Hash: ${block.hash}\n`;
     output.textContent += `Time Taken: ${timeTaken} ms\n\n`;
     prevBlockHash = block.hash;
   }
-});
+}
 
 async function hash(data) {
   const buffer = new TextEncoder().encode(data);
