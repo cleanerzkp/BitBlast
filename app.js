@@ -13,13 +13,17 @@ form.addEventListener('submit', async (event) => {
       nonce: 0,
       hash: ''
     };
+    const startTime = performance.now();
     while (!block.hash.startsWith(hashStart)) {
       block.nonce++;
       block.hash = await hash(`${prevBlockHash}${block.nonce}`);
     }
+    const endTime = performance.now();
+    const timeTaken = (endTime - startTime).toFixed(2);
     output.textContent += `Block: Block ${i}\n`;
     output.textContent += `Nonce: ${block.nonce}\n`;
-    output.textContent += `Hash: ${block.hash}\n\n`;
+    output.textContent += `Hash: ${block.hash}\n`;
+    output.textContent += `Time Taken: ${timeTaken} ms\n\n`;
     prevBlockHash = block.hash;
   }
 });
