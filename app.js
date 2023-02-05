@@ -1,8 +1,5 @@
 const form = document.querySelector('form');
 const output = document.querySelector('#output');
-const urlParams = new URLSearchParams(window.location.search);
-const numBlocks = urlParams.get("numBlocks");
-const hashStart = urlParams.get("hashStart");
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
