@@ -25,10 +25,9 @@ form.addEventListener('submit', async (event) => {
 });
 
 async function hash(data) {
-  const buffer = new TextEncoder().encode(data);
-  const hashArray = await window.crypto.subtle.digest('SHA-256', buffer);
-  const hashHex = Array.from(new Uint8Array(hashArray))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
-  return hashHex;
-}
+    const buffer = new TextEncoder().encode(data);
+    const hashArray = await window.crypto.subtle.digest('SHA-256', buffer);
+    const hex = Array.from(new Uint8Array(hashArray)).map(b => b.toString(16).padStart(2, '0')).join('');
+    return hex;
+  }
+  
