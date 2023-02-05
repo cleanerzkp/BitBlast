@@ -1,26 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <title>bit</title>
-</head>
-<body>
-  <h1>BitBlast</h1>
-  <form>
-    <label for="blockNumber">Number of Blocks:</label>
-    <input type="number" id="blockNumber" name="blockNumber" min="0" max="100">
-    <br><br>
-    <label for="firstCharacter">First Character of Hash:</label>
-    <input type="text" id="firstCharacter" name="firstCharacter" maxlength="1">
-    <br><br>
-    <button type="submit">Submit</button>
-  </form>
-  <br>
-  <div id="results">
-  </div>
-  <script type="text/javascript" src="index.js"></script>
-</body>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitBlast</title>
+  </head>
+  <body>
+    <h1>BitBlast</h1>
+    <form>
+      <div>
+        <label for="numBlocks">Number of Blocks:</label>
+        <input type="number" id="numBlocks" name="numBlocks" min="1" max="100" required>
+      </div>
+      <div>
+        <label for="hashStart">First Character of Hash:</label>
+        <input type="text" id="hashStart" name="hashStart" pattern="[0-9a-fA-F]" maxlength="1" required>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+    <pre id="output"></pre>
+    <script>
+      const form = document.querySelector('form');
+      const output = document.querySelector('#output');
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const numBlocks = form.elements.numBlocks.value;
+        const hashStart = form.elements.hashStart.value;
+
+        output.textContent = '';
+        let prevBlockHash = '';
+        for (let i = 1; i <= numBlocks; i++) {
+          let block = {
+            nonce: 0,
+            hash: ''
+          };
+          while (!block.hash.startsWith(hashStart)) {
+            block.nonce++;
+            block.hash = await hash(`${prevBlockHash}${block.nonce}`);
+          }
+          output.textContent += `Block: Block ${i}\n`;
+          output.textContent += `Nonce: ${block.nonce}\n`;
+          output.textContent += `Hash: ${block.hash}\n\n`;
+          prevBlockHash = block.hash;
+        }
+      });
+
+      async function hash(data) {
+        const buffer = new TextEncoder().encode(data);
+        const hashArray = await window.crypto.subtle.digest('SHA-256', buffer);
+        const hashHex = Array.from(new Uint8Array(hashArray))
+          .map(b => b.toString(16).padStart(2, '0'))
+          .join('');
+        return hashHex;
+      }
+    </script>
+  </body>
 </html>
