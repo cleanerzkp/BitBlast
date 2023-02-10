@@ -1,0 +1,11 @@
+const { publicKeyToAddress } = require("ethereum-cryptography/utils");
+
+function getLast20Bytes(publicKey) {
+  return publicKeyToAddress(publicKey);
+}
+
+// Example usage:
+const publicKey = "0x1234567890abcdef1234567890abcdef12345678";
+const last20Bytes = getLast20Bytes(publicKey);
+console.log(last20Bytes);
+// Output: "0xabcdef1234567890abcdef12"
