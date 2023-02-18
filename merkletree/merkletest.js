@@ -33,3 +33,6 @@ testCases.forEach(({ leaves, expectedRoot }) => {
   const root = tree.getRoot();
   console.log(`Leaves: [${leaves.join(', ')}], Expected root: ${expectedRoot}, Actual root: ${root}`);
 });
+
+
+
